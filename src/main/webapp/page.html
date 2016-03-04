@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head>
+<title>Testing websockets</title>
+</head>
+<body>
+	<div>
+		<input type="submit" value="发送" onclick="start()" />
+		<input type="text" id="name" placeholder="请输入昵称">
+		<span>发送信息</span>
+		<textarea rows="4" cols="40" id="sendMessage"> </textarea>
+		<br/><br/><br/><br/>
+		<span>接收信息</span>
+		<div  id="receiveMessage" style=" border: 1px;color: red; width: 1000px;height: 200px;border-style: solid;"> </div>
+	</div>
+	<div id="messages"></div>
+	<script type="text/javascript">
+		var webSocket = 
+			new WebSocket('ws://10.72.1.215:8080/com-byteslounge-websockets/websocket');
+
+		webSocket.onerror = function(event) {
+			onError(event)
+		};
+
+		webSocket.onopen = function(event) {
+			onOpen(event)
+		};
+
+		webSocket.onmessage = function(event) {
+			onMessage(event)
+		};
+
+		function onMessage(event) {
+			document.getElementById('receiveMessage').innerHTML 
+				+= '<br />' + event.data;
+		}
+
+		function onOpen(event) {
+			document.getElementById('messages').innerHTML 
+				= 'Connection established';
+		}
+
+		function onError(event) {
+			alert(event.data);
+		}
+
+		function start() {
+			var message=document.getElementById("sendMessage").value;
+			var name=document.getElementById("name").value;
+			
+			webSocket.send(name+"说: "+message);
+			return false;
+		}
+	</script>
+</body>
+</html>
